@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WishingApp</title>
+    <!-- Bootstrap Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    {% load static %}	
+    <link rel="stylesheet" href="{% static 'wishing_app/css/style.css' %}">    
+    <!--<script src="{% static 'gold_dig/js/script.js' %}"></script></head>-->
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h3 class="display-4">Hello {{ request.session.first_name }} {{ request.session.last_name }}</h3>
+            <p><a href="/logout">LOGOUT {{ request.session.first_name }}</a></p>
+            {% if messages %}
+            <ul class="messages">    
+                {% for message in messages %}    
+                    <div class="alert alert-warning" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>    
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container container-fluid">
+        <div class="row align-items-start">
+            <div class="col">
+                <div class="card mb-3" style="min-width: 640px;">
+                    <div class="row no-gutters">
+                        
+                        <div class="col-md-8">
+                            <form class="card-body" action="/wishes/{{wish.id}}/update" method="post">
+                            {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="wish_title">Title:</label>
+                                    <input type="text" class="form-control" name="wish_title" value="{{wish.title}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="wish_description">Description:</label>
+                                    <input type="text" class="form-control" name="wish_description" value="{{wish.description}}"></input>
+                                </div>
+                                <a href="/success"><button type="">Cancel</button></a>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

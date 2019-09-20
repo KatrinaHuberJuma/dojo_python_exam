@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WishingApp</title>
+    <!-- Bootstrap Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    {% load static %}	
+    <link rel="stylesheet" href="{% static 'wishing_app/css/style.css' %}">    
+    <!--<script src="{% static 'gold_dig/js/script.js' %}"></script>-->
+    </head>
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <!--<div class="container container-fluid">-->
+            <h1 class="display-4 header-inline">Welcome {{ request.session.first_name }} {{ request.session.last_name }}</h1>
+            <div class="header-inline header-right">
+                <p class="header-right"><a href="/logout">LOGOUT {{ request.session.first_name }}</a></p>
+            <a href="/wishes/new"><button class="header-right">Add A wish</button></a>
+            </div>
+        <!--</div>-->
+    </div>
+    <div class="container container-fluid">
+        <div class="row align-items-start">
+            <!--****************** MY WISHES ***************************-->
+            <div class="col">
+            <h3>View a wish</h3>
+                
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <th>Wish</th>
+                        <th>Wished for on</a></th>
+                        <th>Actions</th>
+                    </thead>
+                {% for wish in my_pending_wishes %}
+                        <tr>
+                            <td>{{wish.title}}</td>
+                            <td>{{wish.created_at}}</td>
+                            <td><a href="/wishes/{{wish.id}}/destroy">Unwish</a> |
+                            <a href="/wishes/{{wish.id}}/edit">Edit</a> | 
+                            <a href="/wishes/{{wish.id}}/grant">Grant</a></td>
+                            
+                        </tr>
+                {% endfor %}
+                </table>
+                    
+            </div>
+        </div>
+        <!--****************** Granted WISHES ***************************-->
+        <div class="row">
+            <div class="col">
+            <h3>View a wish</h3>
+                
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <th>Wish</th>
+                        <th>Wisher</th>
+                        <th>Wished for on</th>
+                        <th>Granted on</th>
+                        <th>Likes</th>
+                        <th>Actions</th>
+                    </thead>
+                {% for wish in all_ganted_wishes %}
+                        <tr>
+                            <td>{{wish.title}}</td>
+                            <td>{{wish.wished_for_by.first_name}} {{wish.wished_for_by.last_name}}</td>
+                            <td>{{wish.created_at}}</td>
+                            <td>{{wish.updated_at}}</td>
+                            <td>{{wish.fans.count}}</td>
+                            <td>
+                                {% if request.session.id != wish.wished_for_by.id %}
+                                    <a href="wishes/{{wish.id}}/like">Toggle Like</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                {% endfor %}
+                </table>
+                    
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
